@@ -10,7 +10,10 @@ use patterns::{
     visitor::{Leaf, Node, TComposite, Visitor},
 };
 
-use crate::patterns::observer::{Observer, Subject, TSubject};
+use crate::patterns::{
+    method_state::What,
+    observer::{Observer, Subject, TSubject},
+};
 
 pub mod patterns;
 
@@ -22,6 +25,20 @@ fn main() {
     grengeng.state.operation();
     grengeng.state = Box::new(StateEnd {});
     grengeng.state.operation();
+
+    // method states
+    let mut grief = What::what_grief();
+    grief.op1();
+    grief.op2();
+    println!("val: {}", grief.val);
+    grief.op3();
+    println!("val: {}", grief.val);
+    grief.change_mode();
+    grief.op1();
+    grief.op2();
+    println!("val: {}", grief.val);
+    grief.op3();
+    println!("val: {}", grief.val);
 
     // strategy
     let mut thing = ContainerThing {

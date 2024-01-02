@@ -6,3 +6,4 @@ pub mod state;
 pub mod strategy;
 pub mod visitor;
 pub mod observer;
+pub mod method_state;
