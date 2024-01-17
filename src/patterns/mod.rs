@@ -17,3 +17,4 @@ pub mod singleton_bad;
 pub mod state;
 pub mod strategy;
 pub mod visitor;
+pub mod adapter;

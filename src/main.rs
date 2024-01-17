@@ -19,7 +19,7 @@ use crate::patterns::{
     method_state::What,
     monostate::{MockSingleton, MonoGlobi, TrueSingleton, eq, SingletonMono},
     observer::{Observer, Subject, TSubject},
-    singleton_bad::BADSINGLETON, decorator::{Decorator, DecoratorLeaf, TDecorator}, factory_method::{PenguinFactory, TPenguinFactory, ProductType}, abstract_factory::{PenguinAbstractFactory, TPenguinAbstractFactory},
+    singleton_bad::BADSINGLETON, decorator::{Decorator, DecoratorLeaf, TDecorator}, factory_method::{PenguinFactory, TPenguinFactory, ProductType}, abstract_factory::{PenguinAbstractFactory, TPenguinAbstractFactory}, adapter::{Wine, APenguinOS, TWindoof},
 };
 
 pub mod patterns;
@@ -84,6 +84,11 @@ fn main() {
     grengeng.state.operation();
     grengeng.state = Box::new(StateEnd {});
     grengeng.state.operation();
+    println!("=============Done==============\n");
+
+    println!("=============Adapter==============");
+    let adapter = Wine::create(APenguinOS::create());
+    adapter.bsod();
     println!("=============Done==============\n");
 
     println!("=============Method States==============");
