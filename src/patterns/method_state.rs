@@ -8,7 +8,7 @@ pub struct Mode {
 impl Mode {
     pub fn mode_grief() -> Self {
         Self {
-            op1: |what_ref| {
+            op1: |_what_ref| {
                 println!("grief");
             },
             op2: |what_ref| {
@@ -23,7 +23,7 @@ impl Mode {
 
     pub fn mode_graf() -> Self {
         Self {
-            op1: |what_ref| {
+            op1: |_what_ref| {
                 println!("graf");
             },
             op2: |what_ref| {

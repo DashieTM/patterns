@@ -1,3 +1,8 @@
+// the idea is that you can execute commands on a struct from anywhere as long as you have access
+// to the command reference
+// E.g. you can execute command xyz on Peng or on Globi, depending on which reference the command
+// has
+
 pub trait TCommand {
     fn exec(&self);
 }
@@ -12,6 +17,7 @@ impl TCommand for PrintCommand {
     }
 }
 
+// Receiver trait
 pub trait TCommandable {
     fn operation(&self);
 }

@@ -11,13 +11,44 @@ use patterns::{
 };
 
 use crate::patterns::{
+    command_processor::{CommandProcessor, ProcessorGlobi, ProcessorPeng, ProcessorPrintCommand},
+    external_iterator::{GlobalGlobi, TAggregate, TIterator},
+    mediator::{Mediator, TMediator},
+    memento::Originator,
     method_state::What,
     observer::{Observer, Subject, TSubject},
+    singleton_bad::BADSINGLETON, internal_iterator::{InternalGlobi, TInternalIterator},
 };
 
 pub mod patterns;
 
 fn main() {
+    // mediator
+    println!("=============Mediator==============");
+    let mediator = Mediator::create();
+    mediator.mediate();
+    println!("=============Done==============\n");
+
+    println!("=============Memento==============");
+    // memento
+    let mut originator = Originator::create();
+    let mem1 = originator.create_memento(String::from("Ina is best vtuber, apparently"));
+    let mem2 = originator.create_memento(String::from("Dashie is best pony"));
+    originator.set_memento(mem2);
+    println!("{}", originator.internal_data);
+    originator.set_memento(mem1);
+    println!("{}", originator.internal_data);
+    println!("=============Done==============\n");
+
+    println!("=============Shit Singleton==============");
+    // shit ""singleton""
+    // likely not even created due to optimization -> inlining data due to compile time evaluation
+    unsafe { println!("{}", BADSINGLETON.data) };
+    // aka will be likely this
+    println!("kekw singleton");
+    println!("=============Done==============\n");
+
+    println!("=============Object States==============");
     // state
     let mut grengeng = Context {
         state: Box::new(StateStart {}),
@@ -25,7 +56,9 @@ fn main() {
     grengeng.state.operation();
     grengeng.state = Box::new(StateEnd {});
     grengeng.state.operation();
+    println!("=============Done==============\n");
 
+    println!("=============Method States==============");
     // method states
     let mut grief = What::what_grief();
     grief.op1();
@@ -39,7 +72,26 @@ fn main() {
     println!("val: {}", grief.val);
     grief.op3();
     println!("val: {}", grief.val);
+    println!("=============Done==============\n");
 
+    println!("=============External Iterator==============");
+    let globus = GlobalGlobi::<i32>::create(vec![1, 5, 1, 9, 7]);
+    let mut iter = globus.create_iterator();
+    println!("{}", iter.next());
+    println!("{}", iter.next());
+    println!("{}", iter.previous());
+    println!("{}", iter.has_next());
+    println!("{}", iter.has_previous());
+    println!("=============Done==============\n");
+
+    println!("=============Internal Iterator==============");
+    let mut internal_globi = InternalGlobi::create(vec![2,1,4,8,9]);
+    dbg!(&internal_globi.data);
+    internal_globi.for_each(|x| { *x += 1 });
+    dbg!(&internal_globi.data);
+    println!("=============Done==============\n");
+
+    println!("=============Strategy==============");
     // strategy
     let mut thing = ContainerThing {
         container: Vec::new(),
@@ -48,7 +100,9 @@ fn main() {
     thing.strategy.algorithm();
     thing.strategy = Box::new(StrategyGreng {});
     thing.strategy.algorithm();
+    println!("=============Done==============\n");
 
+    println!("=============Bridge==============");
     // bridge
     let mut bridge_obj: Box<dyn Objecty> = Box::new(Monkey {
         imp: Box::new(MonkeyImplementation {}),
@@ -63,18 +117,20 @@ fn main() {
     });
     bridge_obj.objtype();
     bridge_obj.imp().operation();
+    println!("=============Done==============\n");
 
+    println!("=============Visitor with Composite==============");
     // visitor with composite
     let visitor = Rc::new(Visitor {});
     let tree = Node {
         children: vec![Rc::new(Node {
             children: vec![Rc::new(Leaf { val: 2 }), Rc::new(Leaf { val: 3 })],
-            val: 1,
         })],
-        val: 0,
     };
     tree.accept(visitor);
+    println!("=============Done==============\n");
 
+    println!("=============Builder==============");
     // builder
     let pone = PoneBuilder::new()
         .height(20)
@@ -83,7 +139,9 @@ fn main() {
         .best_pone(true)
         .build();
     pone.display();
+    println!("=============Done==============\n");
 
+    println!("=============Command==============");
     // command
     let peng = Box::new(Peng {});
     let mut command = PrintCommand { receiver: peng };
@@ -92,7 +150,22 @@ fn main() {
     let globi = Box::new(Globi {});
     command.receiver = globi;
     command.exec();
+    println!("=============Done==============\n");
 
+    println!("=============Command Processor==============");
+    // command processor
+    let new_peng = Box::new(ProcessorPeng {});
+    let new_globi = Box::new(ProcessorGlobi {});
+    let mut command_processor = CommandProcessor::create();
+    command_processor.do_command(Box::new(ProcessorPrintCommand { receiver: new_peng }));
+    command_processor.do_command(Box::new(ProcessorPrintCommand {
+        receiver: new_globi,
+    }));
+    command_processor.undo_command();
+    command_processor.undo_command();
+    println!("=============Done==============\n");
+
+    println!("=============Flyweight==============");
     // Flyweight
     let factory = FlyWeightFactory::new();
     let tree = Box::new(Tree { height: 20, age: 1 });
@@ -101,7 +174,9 @@ fn main() {
     let other = factory.get_flyweight("default");
     assert_eq!(flyweight, other);
     println!("worky");
+    println!("=============Done==============\n");
 
+    println!("=============Observer==============");
     // Observer
     let subject = Subject::new(0);
     let observer1 = Box::new(Observer {
@@ -114,4 +189,5 @@ fn main() {
     subject.borrow_mut().attach(observer2);
     subject.borrow_mut().set_value(10);
     subject.borrow().notify();
+    println!("=============Done==============\n");
 }

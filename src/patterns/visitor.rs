@@ -21,7 +21,6 @@ impl TComposite for Leaf {
 
 pub struct Node {
     pub children: Vec<Rc<dyn TComposite>>,
-    pub val: i32,
 }
 
 impl TComposite for Node {
@@ -50,6 +49,6 @@ impl TVisitor for Visitor {
     }
 
     fn visit_node(&self, node: &Node) {
-        println!("This is node with value {}", node.val);
+        println!("This is node with {} children", node.children.len());
     }
 }
