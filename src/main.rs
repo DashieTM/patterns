@@ -23,12 +23,16 @@ use crate::patterns::{
     memento::Originator,
     method_state::What,
     monostate::{eq, MockSingleton, MonoGlobi, SingletonMono, TrueSingleton},
+    mutable_companion::{ImmutableValue, MutableCompanion},
     observer::{Observer, Subject, TSubject},
     prototype::{Prototype, PrototypeImplementation},
+    relative_value::Value2,
     singleton_bad::BADSINGLETON,
+    states_for_collections::{Collections, WorkPiece},
     template_method::{TTemplate, TemplateImplementation},
+    type_object::{BookType, Product, VideoType},
     value_object::Value1,
-    whole_value::Date, mutable_companion::{ImmutableValue, MutableCompanion}, relative_value::Value2, type_object::{Product, VideoType, BookType},
+    whole_value::Date,
 };
 
 pub mod patterns;
@@ -114,7 +118,7 @@ fn main() {
     println!("=============Done==============\n");
 
     println!("=============Mutable Companion==============");
-    let immutable_value = ImmutableValue::create(100); 
+    let immutable_value = ImmutableValue::create(100);
     let mut mutable_companion = MutableCompanion::create(immutable_value);
     mutable_companion.increment_value();
     mutable_companion.increment_value();
@@ -124,8 +128,8 @@ fn main() {
     println!("=============Done==============\n");
 
     println!("=============Relative Value==============");
-    let val1 = Value2 {val: 100};
-    let val2 = Value2 {val: 105};
+    let val1 = Value2 { val: 100 };
+    let val2 = Value2 { val: 105 };
     assert_eq!(val1.cmp(&val2), std::cmp::Ordering::Less);
     println!("done");
     println!("=============Done==============\n");
@@ -167,6 +171,28 @@ fn main() {
     println!("val: {}", grief.val);
     grief.op3();
     println!("val: {}", grief.val);
+    println!("=============Done==============\n");
+
+    println!("=============Collection for States==============");
+    let mut collections = Collections::create();
+    collections.add_workpiece(WorkPiece {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        id: 0,
+    });
+    collections.change_mode();
+    collections.add_workpiece(WorkPiece {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        id: 1,
+    });
+    collections.tick();
+    collections.increment();
+    collections.change_mode();
+    collections.tick();
+    collections.increment();
     println!("=============Done==============\n");
 
     println!("=============External Iterator==============");
