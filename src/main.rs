@@ -20,6 +20,7 @@ use crate::patterns::{
     factory_method::{PenguinFactory, ProductType, TPenguinFactory},
     internal_iterator::{InternalGlobi, TInternalIterator},
     mediator::{Mediator, TMediator},
+    mediator2::TestMediator,
     memento::Originator,
     method_state::What,
     monostate::{eq, MockSingleton, MonoGlobi, SingletonMono, TrueSingleton},
@@ -42,6 +43,14 @@ fn main() {
     println!("=============Mediator==============");
     let mediator = Mediator::create();
     mediator.mediate();
+    println!("=============Done==============\n");
+
+    println!("=============Mediator with EventListener==============");
+    let mut test_mediator = TestMediator::create();
+    // note usually the origin is not the client here, but the idea is that all have one input and
+    // output
+    test_mediator.send_data("Henlo Birb".into());
+    test_mediator.receive_data();
     println!("=============Done==============\n");
 
     println!("=============Memento==============");
