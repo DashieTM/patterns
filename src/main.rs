@@ -17,9 +17,9 @@ use crate::patterns::{
     mediator::{Mediator, TMediator},
     memento::Originator,
     method_state::What,
-    monostate::{MockSingleton, MonoGlobi, TrueSingleton},
+    monostate::{MockSingleton, MonoGlobi, TrueSingleton, eq, SingletonMono},
     observer::{Observer, Subject, TSubject},
-    singleton_bad::BADSINGLETON,
+    singleton_bad::BADSINGLETON, decorator::{Decorator, DecoratorLeaf, TDecorator}, factory_method::{PenguinFactory, TPenguinFactory, ProductType}, abstract_factory::{PenguinAbstractFactory, TPenguinAbstractFactory},
 };
 
 pub mod patterns;
@@ -53,8 +53,27 @@ fn main() {
     println!("=============Monostate Singleton==============");
     let singleton_globi_mock = MonoGlobi::create(MockSingleton::create());
     singleton_globi_mock.singleton.do_operation();
+    // not really "created" -> static instance
     let singleton_globi = MonoGlobi::create(TrueSingleton::create());
+    let same_globi_singleton = MonoGlobi::create(TrueSingleton::create());
     singleton_globi.singleton.do_operation();
+    debug_assert!(eq::<dyn SingletonMono>(singleton_globi.singleton, same_globi_singleton.singleton));
+    println!("=============Done==============\n");
+
+    println!("=============Factory Method==============");
+    let penguin_factory = PenguinFactory::create();
+    let product1 = penguin_factory.create_product(ProductType::PenguinOS);
+    product1.print();
+    let product2 = penguin_factory.create_product(ProductType::PenguinPlush);
+    product2.print();
+    println!("=============Done==============\n");
+
+    println!("=============Abstract Factory Method==============");
+    let abstract_factory = PenguinAbstractFactory::create();
+    let plush = abstract_factory.create_plush();
+    plush.print();
+    let os = abstract_factory.create_os();
+    os.print();
     println!("=============Done==============\n");
 
     println!("=============Object States==============");
@@ -102,13 +121,10 @@ fn main() {
 
     println!("=============Strategy==============");
     // strategy
-    let mut thing = ContainerThing {
-        container: Vec::new(),
-        strategy: Box::new(StrategyPeng {}),
-    };
-    thing.strategy.algorithm();
+    let mut thing = ContainerThing::create(vec![2,1,4,9,0], Box::new(StrategyPeng {}));
+    thing.operation();
     thing.strategy = Box::new(StrategyGreng {});
-    thing.strategy.algorithm();
+    thing.operation();
     println!("=============Done==============\n");
 
     println!("=============Bridge==============");
@@ -178,11 +194,12 @@ fn main() {
     // Flyweight
     let factory = FlyWeightFactory::new();
     let tree = Box::new(Tree { height: 20, age: 1 });
+    let tree2 = Box::new(Tree { height: 50, age: 200 });
     let flyweight = factory.get_flyweight("default");
     flyweight.operation(tree);
     let other = factory.get_flyweight("default");
+    other.operation(tree2);
     assert_eq!(flyweight, other);
-    println!("worky");
     println!("=============Done==============\n");
 
     println!("=============Observer==============");
@@ -198,5 +215,10 @@ fn main() {
     subject.borrow_mut().attach(observer2);
     subject.borrow_mut().set_value(10);
     subject.borrow().notify();
+    println!("=============Done==============\n");
+
+    println!("=============Decorator==============");
+    let decorator_tree = Decorator::create(Decorator::create(DecoratorLeaf::create(4)));
+    decorator_tree.operation();
     println!("=============Done==============\n");
 }

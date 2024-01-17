@@ -49,6 +49,7 @@ impl FlyWeightFactory {
     pub fn get_flyweight(&self, key: &'static str) -> Rc<FlyWeightTree> {
         let mut borrow = self.flyweights.borrow_mut();
         if borrow.get(key).is_none() {
+            println!("tree didn't exist, creating new one");
             borrow.insert(
                 key.to_string(),
                 Rc::new(FlyWeightTree {
@@ -56,6 +57,8 @@ impl FlyWeightFactory {
                     name: String::from("name or something"),
                 }),
             );
+        } else {
+            println!("tree existed, creating reference to it"); 
         }
         borrow.get(key).unwrap().clone()
     }

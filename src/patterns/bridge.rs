@@ -3,6 +3,7 @@ pub trait Objecty {
         println!("This is the default object");
     }
     fn set_imp(&mut self, imp: Box<dyn Implementation>);
+    #[allow(clippy::borrowed_box)]
     fn imp(&self) -> &Box<dyn Implementation>;
 }
 

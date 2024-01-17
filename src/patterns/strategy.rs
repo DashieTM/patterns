@@ -3,6 +3,19 @@ pub struct ContainerThing {
     pub strategy: Box<dyn Strategy>,
 }
 
+impl ContainerThing {
+    pub fn create(container: Vec<i32>, strategy: Box<dyn Strategy>) -> Self {
+        Self {
+            container,
+            strategy,
+        }
+    }
+    
+    pub fn operation(&self) {
+        self.strategy.algorithm();
+    }
+}
+
 pub trait Strategy {
     fn algorithm(&self) {}
 }

@@ -15,7 +15,7 @@ impl InternalGlobi {
 
 impl TInternalIterator for InternalGlobi {
     fn for_each(&mut self, func: fn(&mut i32)) {
-        for mut item in self.data.iter_mut() {
+        for item in self.data.iter_mut() {
             (func)(item);
         }
     }

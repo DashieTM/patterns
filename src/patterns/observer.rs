@@ -16,6 +16,10 @@ pub struct Observer {
 
 impl TObserver for Observer {
     fn update(&self) {
+        // note usually, the get_value function is called alter on
+        // but it can also be called here.
+        // The idea is that classes holding the observer, will at a random point
+        // get the value after an update -> on ready
         println!("new val {}", self.subject.borrow().get_value());
     }
 }
