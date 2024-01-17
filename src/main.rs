@@ -11,15 +11,24 @@ use patterns::{
 };
 
 use crate::patterns::{
+    abstract_factory::{PenguinAbstractFactory, TPenguinAbstractFactory},
+    adapter::{APenguinOS, TWindoof, Wine},
     command_processor::{CommandProcessor, ProcessorGlobi, ProcessorPeng, ProcessorPrintCommand},
+    decorator::{Decorator, DecoratorLeaf, TDecorator},
     external_iterator::{GlobalGlobi, TAggregate, TIterator},
+    facade::PCFacade,
+    factory_method::{PenguinFactory, ProductType, TPenguinFactory},
     internal_iterator::{InternalGlobi, TInternalIterator},
     mediator::{Mediator, TMediator},
     memento::Originator,
     method_state::What,
-    monostate::{MockSingleton, MonoGlobi, TrueSingleton, eq, SingletonMono},
+    monostate::{eq, MockSingleton, MonoGlobi, SingletonMono, TrueSingleton},
     observer::{Observer, Subject, TSubject},
-    singleton_bad::BADSINGLETON, decorator::{Decorator, DecoratorLeaf, TDecorator}, factory_method::{PenguinFactory, TPenguinFactory, ProductType}, abstract_factory::{PenguinAbstractFactory, TPenguinAbstractFactory}, adapter::{Wine, APenguinOS, TWindoof},
+    prototype::{Prototype, PrototypeImplementation},
+    singleton_bad::BADSINGLETON,
+    template_method::{TTemplate, TemplateImplementation},
+    value_object::Value1,
+    whole_value::Date, mutable_companion::{ImmutableValue, MutableCompanion}, relative_value::Value2,
 };
 
 pub mod patterns;
@@ -57,7 +66,10 @@ fn main() {
     let singleton_globi = MonoGlobi::create(TrueSingleton::create());
     let same_globi_singleton = MonoGlobi::create(TrueSingleton::create());
     singleton_globi.singleton.do_operation();
-    debug_assert!(eq::<dyn SingletonMono>(singleton_globi.singleton, same_globi_singleton.singleton));
+    debug_assert!(eq::<dyn SingletonMono>(
+        singleton_globi.singleton,
+        same_globi_singleton.singleton
+    ));
     println!("=============Done==============\n");
 
     println!("=============Factory Method==============");
@@ -66,6 +78,56 @@ fn main() {
     product1.print();
     let product2 = penguin_factory.create_product(ProductType::PenguinPlush);
     product2.print();
+    println!("=============Done==============\n");
+
+    println!("=============Facade==============");
+    let pc = PCFacade::create();
+    pc.boot();
+    println!("=============Done==============\n");
+
+    println!("=============Template Method==============");
+    let template_method = TemplateImplementation::create();
+    template_method.algorithm();
+    println!("=============Done==============\n");
+
+    println!("=============Prototype==============");
+    let prototype = PrototypeImplementation::create();
+    // this is not the standard clone btw.... lel
+    dbg!(&prototype);
+    let cloneroni = prototype.clone();
+    dbg!(&cloneroni);
+    println!("=============Done==============\n");
+
+    println!("=============Whole Value==============");
+    let date1 = Date::create(2025, 12, 4);
+    assert_eq!(date1, None);
+    let date2 = Date::create(2024, 12, 4);
+    assert!(date2.is_some());
+    println!("done");
+    println!("=============Done==============\n");
+
+    println!("=============Value Object==============");
+    let value_object = Value1::create(12, "Something".into(), vec![1, 2, 4, 2]);
+    let value_object2 = Value1::create(12, "Something".into(), vec![1, 2, 4, 2]);
+    assert!(value_object.equal(&value_object2));
+    println!("done");
+    println!("=============Done==============\n");
+
+    println!("=============Mutable Companion==============");
+    let immutable_value = ImmutableValue::create(100); 
+    let mut mutable_companion = MutableCompanion::create(immutable_value);
+    mutable_companion.increment_value();
+    mutable_companion.increment_value();
+    let new_val = mutable_companion.as_value();
+    assert_eq!(new_val.get_value(), 102);
+    println!("done");
+    println!("=============Done==============\n");
+
+    println!("=============Relative Value==============");
+    let val1 = Value2 {val: 100};
+    let val2 = Value2 {val: 105};
+    assert_eq!(val1.cmp(&val2), std::cmp::Ordering::Less);
+    println!("done");
     println!("=============Done==============\n");
 
     println!("=============Abstract Factory Method==============");
@@ -126,7 +188,7 @@ fn main() {
 
     println!("=============Strategy==============");
     // strategy
-    let mut thing = ContainerThing::create(vec![2,1,4,9,0], Box::new(StrategyPeng {}));
+    let mut thing = ContainerThing::create(vec![2, 1, 4, 9, 0], Box::new(StrategyPeng {}));
     thing.operation();
     thing.strategy = Box::new(StrategyGreng {});
     thing.operation();
@@ -199,7 +261,10 @@ fn main() {
     // Flyweight
     let factory = FlyWeightFactory::new();
     let tree = Box::new(Tree { height: 20, age: 1 });
-    let tree2 = Box::new(Tree { height: 50, age: 200 });
+    let tree2 = Box::new(Tree {
+        height: 50,
+        age: 200,
+    });
     let flyweight = factory.get_flyweight("default");
     flyweight.operation(tree);
     let other = factory.get_flyweight("default");
