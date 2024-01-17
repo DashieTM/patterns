@@ -13,3 +13,4 @@ pub mod singleton_bad;
 pub mod command_processor;
 pub mod internal_iterator;
 pub mod external_iterator;
+pub mod monostate;

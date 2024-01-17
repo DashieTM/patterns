@@ -13,11 +13,13 @@ use patterns::{
 use crate::patterns::{
     command_processor::{CommandProcessor, ProcessorGlobi, ProcessorPeng, ProcessorPrintCommand},
     external_iterator::{GlobalGlobi, TAggregate, TIterator},
+    internal_iterator::{InternalGlobi, TInternalIterator},
     mediator::{Mediator, TMediator},
     memento::Originator,
     method_state::What,
+    monostate::{MockSingleton, MonoGlobi, TrueSingleton},
     observer::{Observer, Subject, TSubject},
-    singleton_bad::BADSINGLETON, internal_iterator::{InternalGlobi, TInternalIterator},
+    singleton_bad::BADSINGLETON,
 };
 
 pub mod patterns;
@@ -46,6 +48,13 @@ fn main() {
     unsafe { println!("{}", BADSINGLETON.data) };
     // aka will be likely this
     println!("kekw singleton");
+    println!("=============Done==============\n");
+
+    println!("=============Monostate Singleton==============");
+    let singleton_globi_mock = MonoGlobi::create(MockSingleton::create());
+    singleton_globi_mock.singleton.do_operation();
+    let singleton_globi = MonoGlobi::create(TrueSingleton::create());
+    singleton_globi.singleton.do_operation();
     println!("=============Done==============\n");
 
     println!("=============Object States==============");
@@ -85,9 +94,9 @@ fn main() {
     println!("=============Done==============\n");
 
     println!("=============Internal Iterator==============");
-    let mut internal_globi = InternalGlobi::create(vec![2,1,4,8,9]);
+    let mut internal_globi = InternalGlobi::create(vec![2, 1, 4, 8, 9]);
     dbg!(&internal_globi.data);
-    internal_globi.for_each(|x| { *x += 1 });
+    internal_globi.for_each(|x| *x += 1);
     dbg!(&internal_globi.data);
     println!("=============Done==============\n");
 
