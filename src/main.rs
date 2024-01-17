@@ -28,7 +28,7 @@ use crate::patterns::{
     singleton_bad::BADSINGLETON,
     template_method::{TTemplate, TemplateImplementation},
     value_object::Value1,
-    whole_value::Date, mutable_companion::{ImmutableValue, MutableCompanion}, relative_value::Value2,
+    whole_value::Date, mutable_companion::{ImmutableValue, MutableCompanion}, relative_value::Value2, type_object::{Product, VideoType, BookType},
 };
 
 pub mod patterns;
@@ -270,6 +270,13 @@ fn main() {
     let other = factory.get_flyweight("default");
     other.operation(tree2);
     assert_eq!(flyweight, other);
+    println!("=============Done==============\n");
+
+    println!("=============Observer==============");
+    let product = Product::create(0, Box::new(BookType {}));
+    let product2 = Product::create(1, Box::new(VideoType {}));
+    product.print_info();
+    product2.print_info();
     println!("=============Done==============\n");
 
     println!("=============Observer==============");

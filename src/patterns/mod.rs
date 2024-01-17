@@ -25,3 +25,4 @@ pub mod whole_value;
 pub mod value_object;
 pub mod mutable_companion;
 pub mod relative_value;
+pub mod type_object;
