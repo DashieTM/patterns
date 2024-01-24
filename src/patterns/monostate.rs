@@ -64,7 +64,7 @@ impl MonoGlobi {
 pub fn eq<T: ?Sized>(left: Arc<T>, right: Arc<T>) -> bool {
     let left: *const T = left.as_ref();
     let right: *const T = right.as_ref();
-    let ret = left == right;
+    let ret = std::ptr::addr_eq(left, right);
     dbg!(left);
     dbg!(right);
     ret

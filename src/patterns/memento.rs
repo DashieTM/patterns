@@ -1,3 +1,5 @@
+// note there is technically a set_state function on the memento, this would change the dynamic as
+// you can mutate the state later on.
 pub struct Memento {
     pub data: String,
 }
